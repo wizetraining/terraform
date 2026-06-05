@@ -445,5 +445,5 @@ resource "aws_instance" "audit_vm" {
 Vous pouvez télécharger le code de la solution prêt à être déployé ici : 
 
 ```bash
-git clone http://gitlab.mpakoupete.com/root/terraform-correction-lab02.git
+git clone https://github.com/wizetraining/terraform-correction.git
 ```

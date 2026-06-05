@@ -285,6 +285,6 @@ Vous remarquerez que dans la version `v1.0.0` la clée SSH n'est pas prise en co
 Vous pouvez télécharger le code de la solution prêt à être déployé ici : 
 
 ```bash
-git clone http://gitlab.mpakoupete.com/root/terraform-correction-lab06.git
+git clone https://github.com/wizetraining/terraform-correction.git
 ```
 

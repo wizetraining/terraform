@@ -203,5 +203,5 @@ Si Canonical a sorti une nouvelle version d'Ubuntu entre temps, le `data source`
 Vous pouvez télécharger le code de la solution prêt à être déployé ici : 
 
 ```bash
-git clone http://gitlab.mpakoupete.com/root/terraform-correction-lab05.git
+git clone https://github.com/wizetraining/terraform-correction.git
 ```

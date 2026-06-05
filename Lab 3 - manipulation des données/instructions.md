@@ -296,5 +296,5 @@ Une fois le déploiement terminé (vert) :
 Vous pouvez télécharger le code de la solution prêt à être déployé ici : 
 
 ```bash
-git clone http://gitlab.mpakoupete.com/root/terraform-correction-lab03.git
+git clone https://github.com/wizetraining/terraform-correction.git
 ```

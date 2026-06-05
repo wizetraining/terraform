@@ -292,6 +292,6 @@ Cela évite les suppressions "par accident" en un seul commit.
 Vous pouvez télécharger le code de la solution prêt à être déployé ici : 
 
 ```bash
-git clone http://gitlab.mpakoupete.com/root/terraform-correction-lab04.git
+git clone https://github.com/wizetraining/terraform-correction.git
 ```
 
