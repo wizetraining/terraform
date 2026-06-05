@@ -19,45 +19,38 @@ import socket
 from flask import Flask, request
 import logging
 
-# Configuration du logging standard pour une sortie propre
+# Configuration du logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
-
-# --- GESTION DES SECRETS ---
-# On lit le mot de passe Redis depuis le fichier /etc/app/secrets/redis_password
 try:
     with open('/etc/app/secrets/redis_password', 'r') as secret_file:
         redis_password = secret_file.read().strip()
     app.logger.info("Mot de passe Redis chargé avec succès.")
 except IOError:
-    # Fallback si le secret n'est pas trouvé
     redis_password = None
-    app.logger.warning("Secret 'redis_password' non trouvé. Tentative de connexion sans mot de passe.")
+    app.logger.warning("Secret non trouvé. Connexion sans mot de passe.")
 
-# On se connecte au service 'redis' avec le mot de passe
-cache = redis.Redis(host='<IP_SERVEUR_REDIS>', port=6379, password=redis_password, decode_responses=True)
+REDIS_HOST = 'redis'
+
+# Connexion utilisant l'IP injectée dynamiquement et le mot de passe lu
+cache = redis.Redis(host=REDIS_HOST, port=6379, password=redis_password, decode_responses=True)
 
 def get_hit_count():
-    """
-    Tente de se connecter à Redis et d'incrémenter le compteur.
-    Gère les erreurs de connexion et d'authentification.
-    """
+    """ Logique de connexion Redis avec retries """
     retries = 5
     while True:
         try:
-            # Tente de vérifier la connexion avant d'incrémenter
-            cache.ping()
+            cache.ping() # Vérifie la connexion
             return cache.incr('hits')
         except redis.exceptions.ResponseError as exc:
-            # Ceci interceptera les erreurs d'authentification
-            app.logger.error(f"Erreur d'authentification Redis: {exc}")
+            app.logger.error(f"Erreur Auth: {exc}")
             return "Erreur d'authentification"
         except redis.exceptions.ConnectionError as exc:
             if retries == 0:
                 raise exc
             retries -= 1
-            app.logger.warning(f"Connexion à Redis échouée. Nouvelle tentative dans 0.5s... ({retries} restantes)")
+            app.logger.warning(f"Retry connexion Redis... ({retries} restantes)")
             time.sleep(0.5)
 
 @app.route('/')
@@ -66,23 +59,19 @@ def hello():
     count = 0
     try:
         count = get_hit_count()
-        # On vérifie si le compteur est un nombre (succès) ou un message d'erreur
         if isinstance(count, int):
             db_status_message = '<strong style="color:green;">Connecté à la base de données</strong>'
-            # On log chaque visite réussie
-            app.logger.info(f"Visite N°{count} depuis l'IP {request.remote_addr}")
+            app.logger.info(f"Visite N°{count} - IP: {request.remote_addr}")
         else:
-             # Affiche le message d'erreur (ex: Erreur d'authentification)
              db_status_message = f'<span style="color:orange;">{count}</span>'
     except redis.exceptions.ConnectionError:
         count = 'N/A'
         db_status_message = '<span style="color:red;">Echec de connexion à la base de données</span>'
-        app.logger.error(f"Echec de connexion à Redis depuis l'IP {request.remote_addr}")
+        app.logger.error(f"Echec connexion Redis - IP: {request.remote_addr}")
 
-    # Récupérer le nom d'hôte du conteneur
     hostname = socket.gethostname()
 
-    # Construire le HTML de la réponse
+    # Génération du HTML
     html_response = f"""
     <!DOCTYPE html>
     <html lang="fr">
