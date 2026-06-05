@@ -162,7 +162,7 @@ provider "aws" { region = "eu-west-3" }
 
 provider "vault" {
   address = "http://vault.wizetraining.com:8200"
-  token   = "hvs.F066Sx6TQ8JHyiMgwEGGTfQe"          # Token Etudiant
+  token   = "xxx"          # Token Etudiant
 }
 ```
 
