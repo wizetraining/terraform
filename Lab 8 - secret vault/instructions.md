@@ -129,7 +129,7 @@ if __name__ == "__main__":
 
 Avant de toucher à Terraform, définissons le mot de passe que les deux serveurs partageront.
 
-1. Accédez à votre Vault : `http://vault.wizetraining.com:8200` => token : `hvs.F066Sx6TQ8JHyiMgwEGGTfQe`
+1. Accédez à votre Vault : `http://vault.wizetraining.com:8200` => token : `xxx` (sera fourni)
 2. Allez dans le moteur `kv`.
 3. Créez un nouveau secret :
 * **Path** : `kv/<VOTRE_PRENOM>/countvisit/redis`
@@ -162,7 +162,7 @@ provider "aws" { region = "eu-west-3" }
 
 provider "vault" {
   address = "http://vault.wizetraining.com:8200"
-  token   = "xxx"          # Token Etudiant
+  token   = ""          # Token Etudiant
 }
 ```
 
